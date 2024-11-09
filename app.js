@@ -60,7 +60,7 @@ const checkAPI = async () => {
       if (JSON.stringify(newData) !== JSON.stringify(previousData)) {
         // await sendNotificationEmail(newData);
         previousData = newData; // Cập nhật dữ liệu cũ
-        console.log('gửi mail',newData);
+        console.log('gửi mail',newData.length);
         
       }
     } catch (error) {
