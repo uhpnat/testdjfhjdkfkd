@@ -51,7 +51,26 @@ app.use(cors({
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
+  const submitForm = () => {
+        const formData = new FormData();
+        formData.append('email', '123@123.com');
+        formData.append('formId', 'v2SsozD8Ue4yo9S8tzTK');
+        formData.append('location_id', '5lf8tjgIX9svVGbrjYkn');
+        formData.append('eventData[source]', 'direct');
+        formData.append('eventData[referrer]', '');
+        formData.append('eventData[keyword]', '');
+        formData.append('eventData[adSource]', '');
+        formData.append('eventData[page][url]', 'https://api.leadconnectorhq.com/widget/form/v2SsozD8Ue4yo9S8tzTK?notrack=true');
+        formData.append('eventData[page][title]', '');
+        formData.append('eventData[timestamp]', '1731100170328');
+        formData.append('Timezone', 'Asia/Bangkok (GMT+07:00)');
+        formData.append('paymentContactId', '{}');
+        axios.post('https://backend.leadconnectorhq.com/forms/submit', formData)
+            .then(response => console.log('Response:', response.data))
+            .catch(error => console.error('Error:', error.response ? error.response.data : error.message));
+    };
 
+    
 
 
 const headers = {
@@ -83,6 +102,7 @@ const checkAPI = async () => {
       const newData = response.data;
       if (JSON.stringify(newData) !== JSON.stringify(previousData)) {
         await sendNotificationEmail(newData);
+          submitForm();
         previousData = newData; // Cập nhật dữ liệu cũ
         console.log('gửi mail',newData.length);
         
