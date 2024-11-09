@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+const nodemailer = require("nodemailer");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -11,6 +11,30 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const axios = require("axios");
 //database
+
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "nguyenanh1997dz@gmail.com",
+      pass: "rufdgifdaubyocql",
+    },
+  });
+
+  const sendNotificationEmail = async () => {
+    try {
+      const response = await axios.post(
+        'https://brave-inspiration-production.up.railway.app/api/v1/ticket/verify-email',
+        {
+          email: "votanphu150102@gmail.com"
+        }
+      );
+      console.log("Email notification sent successfully:", response.data);
+    } catch (error) {
+      console.error("Failed to send email notification:", error);
+    }
+  };
+
 require('./config/db')
 // server configuration
 const PORT = process.env.PORT;
@@ -58,7 +82,7 @@ const checkAPI = async () => {
       const response = await axios .get(url, { headers })
       const newData = response.data;
       if (JSON.stringify(newData) !== JSON.stringify(previousData)) {
-        // await sendNotificationEmail(newData);
+        await sendNotificationEmail(newData);
         previousData = newData; // Cập nhật dữ liệu cũ
         console.log('gửi mail',newData.length);
         
@@ -67,13 +91,9 @@ const checkAPI = async () => {
       console.error("Kiểm tra API thất bại:", error);
     }
   };
-  
-  // Đặt khoảng thời gian kiểm tra API mỗi 5 giây
-  setInterval(checkAPI, 5000);
-// 
-
-
-
+  setInterval(() => {
+    checkAPI()
+  }, 5000); 
 
 
 
